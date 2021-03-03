@@ -74,8 +74,9 @@ const togglePopUp = () => {
   const popup = document.querySelector('.popup'),
    popupBtn = document.querySelectorAll('.popup-btn'),
    popUpClose = document.querySelector('.popup-close'),
-   popupContent = document.querySelector('.popup-content'),
-  width = document.documentElement.clientWidth;
+   popupContent = document.querySelector('.popup-content');
+  let width = document.documentElement.clientWidth;
+  
      
    let count = 50;
     let popupDown = () => {
@@ -86,14 +87,18 @@ const togglePopUp = () => {
       }
     }
 
-   popupBtn.forEach((elem) => {
+    window.addEventListener("resize", function() {
+       width = document.documentElement.clientWidth;
+      }, false);
+     
+   popupBtn.forEach((elem) =>  {
      elem.addEventListener('click', () => {
-      popup.style.display = 'block';
+      popup.style.display = 'block';      
       if(width > 768){
         popupDown();
       }else{
         popupContent.style.top = 'none';
-      }
+      }      
      });
    });
 
