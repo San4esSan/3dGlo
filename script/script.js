@@ -70,11 +70,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
       menu.addEventListener('click', (event) => {
         let target = event.target;
-        console.log(target);
         if(target.classList.contains('close-btn')){
           handlerMenu();
-        } else{
-          target.tagName === 'LI';
+        } 
+        if(target.closest('LI')){
           handlerMenu();
         }
       });
