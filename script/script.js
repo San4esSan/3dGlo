@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', function () {
       const timeRemaining = (dateStop - dateNow) / 1000,
         seconds = Math.floor(timeRemaining % 60),        
         minutes = Math.floor((timeRemaining / 60) % 60),
-        hours = Math.floor(timeRemaining / 60 / 60) % 24,
+        hours = Math.floor((timeRemaining / 60 / 60) % 24),
         day = Math.floor(timeRemaining / 60 / 60 / 24);
         
       if (dateStop >= dateNow) {
@@ -50,22 +50,16 @@ window.addEventListener('DOMContentLoaded', function () {
     setInterval(updateClock, 1000);
   }
   // countTimer('03 march 2021');
-  countTimer('05 march 2021 20:47');
+  countTimer('06 march 2021 20:47');
 
   // menu
   const toggleMenu = () =>{
     const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu'),
-      menuItems = menu.querySelectorAll('ul>li');
+      menu = document.querySelector('menu');
 
       const handlerMenu = () => {
         menu.classList.toggle('active-menu');
       }
-
-      // btnMenu.addEventListener('click', handlerMenu);
-      // closeBtn.addEventListener('click', handlerMenu);
-      // menuItems.forEach((elem) => elem.addEventListener('click', handlerMenu));
-
 
       btnMenu.addEventListener('click', (event) => {
         let target = event.target.closest('.menu');
@@ -76,19 +70,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
       menu.addEventListener('click', (event) => {
         let target = event.target;
-        // console.log(target);
+        console.log(target);
         if(target.classList.contains('close-btn')){
           handlerMenu();
-        }       
-        menuItems.forEach((elem) => elem.addEventListener('click', (event) =>{
-          target = event.target;
+        } else{
+          target.tagName === 'LI';
           handlerMenu();
-          console.log(target);
-        }));
+        }
       });
-
-
-
   };
   toggleMenu();
 
