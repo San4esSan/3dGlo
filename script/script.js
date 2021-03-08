@@ -266,4 +266,21 @@ window.addEventListener('DOMContentLoaded', function () {
   
   slider();
 
+  // наша команда
+  const commandPhoto = document.querySelectorAll('.command__photo');
+  console.log('commandPhoto: ', commandPhoto.length);
+  for(let i = 0; i < commandPhoto.length; i++){
+    if('mouseenter'){
+      commandPhoto[i].addEventListener('mouseenter', (event) => {
+        event.target.src = event.target.dataset.img;
+      });
+    } 
+    if('mouseleave'){
+       commandPhoto[i].addEventListener('mouseleave', (event) => {
+        event.target.src = commandPhoto;
+      });
+    }
+    
+  }
+  
 });
