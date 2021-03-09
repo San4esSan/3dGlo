@@ -172,7 +172,6 @@ window.addEventListener('DOMContentLoaded', function () {
     for(let i = 0; i < slide.length; i++){
       let dot = document.createElement('li');
       dot.classList.add('dot');
-      
       ulDot.append(dot);
     }
     const dot = document.querySelectorAll('.dot');
@@ -183,12 +182,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
     const prevSlide = (elem, index, strClass) => {
       elem[index].classList.remove(strClass);
-
     };
 
     const nextSlide = (elem, index, strClass) => {
       elem[index].classList.add(strClass);
-
     };
     
     const autoPlaySlide = () => {
@@ -268,19 +265,52 @@ window.addEventListener('DOMContentLoaded', function () {
 
   // наша команда
   const commandPhoto = document.querySelectorAll('.command__photo');
-  console.log('commandPhoto: ', commandPhoto.length);
   for(let i = 0; i < commandPhoto.length; i++){
-    if('mouseenter'){
-      commandPhoto[i].addEventListener('mouseenter', (event) => {
-        event.target.src = event.target.dataset.img;
-      });
-    } 
-    if('mouseleave'){
-       commandPhoto[i].addEventListener('mouseleave', (event) => {
-        event.target.src = commandPhoto;
-      });
-    }
-    
-  }
+    let photo = commandPhoto[i].src;
+    commandPhoto[i].addEventListener('mouseenter', (event) => {
+      event.target.src = event.target.dataset.img;
+    });
+    commandPhoto[i].addEventListener('mouseleave', (event) => {
+      event.target.src = photo;
+    });    
+  } 
   
+  // расчитать стоимость
+  const calcItem = document.querySelectorAll('.calc-item');
+
+  for(let i = 1; i < calcItem.length; i++){
+    calcItem[i].addEventListener('input', (event) => {
+      event.target.value = calcItem[i].value.replace(/\D/g, '');
+    });
+  }
+
+  // остались вопросы
+  const form2Name = document.querySelector('#form2-name');
+  const mess = document.querySelector('.mess');
+  const form2Email = document.querySelector('#form2-email');
+  const form2Phone = document.querySelector('#form2-phone');
+
+  form2Name.addEventListener('input', () => {
+    form2Name.value = form2Name.value.replace(/[^а-я\s-]/ig, '');
+  });
+
+  mess.addEventListener('input', () => {
+    mess.value = mess.value.replace(/[^а-я\s-]/ig, '');
+  });
+
+  form2Email.addEventListener('input', () => {
+    form2Email.value = form2Email.value.replace(/[^a-z.@\-_*'!~]/ig, '');
+  });
+
+  form2Phone.addEventListener('input', () => {
+    form2Phone.value = form2Phone.value.replace(/[^(\+7|8)(\(\d{3}\)|\d{3})\d{7}$]/, '');
+   
+    console.log('form2Phone.value: ', form2Phone.value);
+  });
+
+
+
+
+
+
 });
