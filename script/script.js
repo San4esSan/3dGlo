@@ -339,7 +339,7 @@ window.addEventListener('DOMContentLoaded', function () {
     form2Name.value = form2Name.value.replace(/[^а-я\s-]/ig, '');
     form2Name.addEventListener('blur', () =>{
       form2Name.value = form2Name.value.charAt(0).toUpperCase() + form2Name.value.toLowerCase().slice(1);
-      form2Name.value = form2Name.value.replace(/ +/g, '-').trim();
+      form2Name.value = form2Name.value.replace(/ +/g, '').trim();
     }, true);
   });
 
@@ -356,7 +356,7 @@ window.addEventListener('DOMContentLoaded', function () {
     form2Email.value = form2Email.value.replace(/[^a-z.@\-_*'!~]/ig, '');
     // form2Email.value = form2Email.value.replace(/[^[a-z._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$]/i, '');
     form2Email.addEventListener('blur', () =>{
-      form2Email.value = form2Email.value.toLowerCase().replace(/ +/g, '').trim();
+      form2Email.value = form2Email.value.toLowerCase().replace(/( +)(-)/g, '').trim();
     }, true);
   });
 
@@ -364,12 +364,9 @@ window.addEventListener('DOMContentLoaded', function () {
     form2Phone.value = form2Phone.value.replace(/[^(\+7|8)\-(\(\d{3}\)|\d{3})\d{7}$]/, '');
     form2Phone.addEventListener('blur', () =>{
       form2Phone.value = form2Phone.value.replace(/ +/g, '').trim();
+      // maskPhone('#form2-phone');
     }, true);
   });
-
-
-
-
 
 
 });
