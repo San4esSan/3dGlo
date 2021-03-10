@@ -359,7 +359,7 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   form2Phone.addEventListener('input', () => {
-    form2Phone.value = form2Phone.value.replace(/[^(\+7|8)(\(\d{3}\)|\d{3})\d{7}$]/, '');
+    form2Phone.value = form2Phone.value.replace(/[^(\+7|8)\-(\(\d{3}\)|\d{3})\d{7}$]/, '');
     form2Phone.addEventListener('blur', () =>{
       form2Phone.value = form2Phone.value.replace(/ +/g, '').trim();
     }, true);
