@@ -365,7 +365,7 @@ window.addEventListener('DOMContentLoaded', function () {
     }, true);
   });
 
-
+  maskPhone('#form2-phone');
 
 
 

@@ -412,6 +412,20 @@
 	</div>
 </div>
 
+
+<script src="./plugins/validator/validator.js"></script>
+
+<script>
+  const valid = new Validator({
+    selector: '#myform',
+    pattern: {},
+    method: {}
+  });
+
+  valid.init();
+</script>
+
+<script src="./script/maskPhone.js"></script>
 <script src="./script/script.js"></script>
 </body>
 </html>
