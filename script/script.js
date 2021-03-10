@@ -313,7 +313,8 @@ window.addEventListener('DOMContentLoaded', function () {
         total = price * typeValue * squareValue * countValue * dayValue;
       }
       
-      totalValue.textContent = total;
+      totalValue.textContent = Math.round(total);
+      // totalValue.textContent = total;
      };
 
      calcBlock.addEventListener('change', (event) => {
@@ -337,14 +338,15 @@ window.addEventListener('DOMContentLoaded', function () {
   form2Name.addEventListener('input', () => {
     form2Name.value = form2Name.value.replace(/[^а-я\s-]/ig, '');
     form2Name.addEventListener('blur', () =>{
-      form2Name.value = form2Name.value[0].toUpperCase() + form2Name.value.toLowerCase().slice(1);
+      form2Name.value = form2Name.value.charAt(0).toUpperCase() + form2Name.value.toLowerCase().slice(1);
+      form2Name.value = form2Name.value.replace(/ +/g, '-').trim();
     }, true);
   });
 
   form2Message.addEventListener('input', () => {
     form2Message.value = form2Message.value.replace(/[^а-я\s-]/ig, '');
     form2Name.addEventListener('blur', () =>{
-      form2Message.value = form2Message.value[0].toUpperCase() + form2Message.value.toLowerCase().slice(1);
+      form2Message.value = form2Message.value.charAt(0).toUpperCase() + form2Message.value.toLowerCase().slice(1);
       form2Message.value = form2Message.value.replace(/ +/g, ' ').trim();
     }, true);
     
