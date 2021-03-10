@@ -275,7 +275,7 @@ window.addEventListener('DOMContentLoaded', function () {
     });    
   } 
   
-  // расчитать стоимость
+  // калькулятор
   const calcItem = document.querySelectorAll('.calc-item');
 
   for(let i = 1; i < calcItem.length; i++){
@@ -284,28 +284,85 @@ window.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  const calc = (price = 100) => {
+    const calcBlock = document.querySelector('.calc-block'),
+     calcType = document.querySelector('.calc-type'),
+     calcSquare = document.querySelector('.calc-square'),
+     calcDay = document.querySelector('.calc-day'),
+     calcCount = document.querySelector('.calc-count'),
+     totalValue = document.getElementById('total');
+
+     const countSum = () => {
+       let total = 0,
+       countValue = 1,
+       dayValue = 1;
+       const typeValue = calcType.options[calcType.selectedIndex].value,
+        squareValue = +calcSquare.value;
+
+      if(calcCount.value > 1){
+        countValue += (calcCount.value - 1) / 10;
+      }
+
+      if(calcDay.value && calcDay.value < 5){
+        dayValue *= 2;
+      }else if(calcDay.value && calcDay.value < 10){
+        dayValue *= 1.5;
+      }
+
+      if(typeValue && squareValue) {
+        total = price * typeValue * squareValue * countValue * dayValue;
+      }
+      
+      totalValue.textContent = total;
+     };
+
+     calcBlock.addEventListener('change', (event) => {
+       const target = event.target;
+      
+      if(target.matches('select') || target.matches('input')){
+        countSum();
+      }
+
+    });
+
+  };
+  calc(100);
+
   // остались вопросы
   const form2Name = document.querySelector('#form2-name');
-  const mess = document.querySelector('.mess');
+  const form2Message = document.querySelector('#form2-message');
   const form2Email = document.querySelector('#form2-email');
   const form2Phone = document.querySelector('#form2-phone');
 
   form2Name.addEventListener('input', () => {
     form2Name.value = form2Name.value.replace(/[^а-я\s-]/ig, '');
+    form2Name.addEventListener('blur', () =>{
+      form2Name.value = form2Name.value[0].toUpperCase() + form2Name.value.toLowerCase().slice(1);
+    }, true);
   });
 
-  mess.addEventListener('input', () => {
-    mess.value = mess.value.replace(/[^а-я\s-]/ig, '');
+  form2Message.addEventListener('input', () => {
+    form2Message.value = form2Message.value.replace(/[^а-я\s-]/ig, '');
+    form2Name.addEventListener('blur', () =>{
+      form2Message.value = form2Message.value[0].toUpperCase() + form2Message.value.toLowerCase().slice(1);
+      form2Message.value = form2Message.value.replace(/ +/g, ' ').trim();
+    }, true);
+    
   });
 
   form2Email.addEventListener('input', () => {
     form2Email.value = form2Email.value.replace(/[^a-z.@\-_*'!~]/ig, '');
+    // form2Email.value = form2Email.value.replace(/[^[a-z._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$]/i, '');
+    form2Email.addEventListener('blur', () =>{
+      form2Email.value = form2Email.value.toLowerCase().replace(/ +/g, '').trim();
+    }, true);
   });
 
   form2Phone.addEventListener('input', () => {
-    form2Phone.value = form2Phone.value.replace(/[^(\+7|8)(\(\d{3}\)|\d{3})\d{7}$]/, '');
-   
-    console.log('form2Phone.value: ', form2Phone.value);
+    form2Phone.value = form2Phone.value.replace(/[^(\+7|8)\-(\(\d{3}\)|\d{3})\d{7}$]/, '');
+    form2Phone.addEventListener('blur', () =>{
+      form2Phone.value = form2Phone.value.replace(/ +/g, '').trim();
+    }, true);
   });
 
 
