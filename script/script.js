@@ -335,19 +335,36 @@ window.addEventListener('DOMContentLoaded', function () {
   const form2Email = document.querySelector('#form2-email');
   const form2Phone = document.querySelector('#form2-phone');
 
+  const toString = (str) => {
+    return str
+    .replace(/ +/g, ' ').trim()
+    .replace(/-+/g, '-')
+    .replace(/^-/g, '')
+    .replace(/-$/g, '');
+  };
+
   form2Name.addEventListener('input', () => {
     form2Name.value = form2Name.value.replace(/[^а-я\s-]/ig, '');
+
     form2Name.addEventListener('blur', () =>{
-      form2Name.value = form2Name.value.charAt(0).toUpperCase() + form2Name.value.toLowerCase().slice(1);
-      form2Name.value = form2Name.value.replace(/ +/g, '').trim();
+      form2Name.value = toString(form2Name.value);
+      const toTitleCase = (str) => {
+        return str
+          .toLowerCase()
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+      };
+      form2Name.value = toTitleCase(form2Name.value);
     }, true);
   });
 
   form2Message.addEventListener('input', () => {
     form2Message.value = form2Message.value.replace(/[^а-я\s-]/ig, '');
+
     form2Name.addEventListener('blur', () =>{
       form2Message.value = form2Message.value.charAt(0).toUpperCase() + form2Message.value.toLowerCase().slice(1);
-      form2Message.value = form2Message.value.replace(/ +/g, ' ').trim();
+      form2Message.value = toString(form2Message.value);
     }, true);
     
   });
@@ -356,15 +373,17 @@ window.addEventListener('DOMContentLoaded', function () {
     form2Email.value = form2Email.value.replace(/[^a-z.@\-_*'!~]/ig, '');
     // form2Email.value = form2Email.value.replace(/[^[a-z._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$]/i, '');
     form2Email.addEventListener('blur', () =>{
-      form2Email.value = form2Email.value.toLowerCase().replace(/( +)(-)/g, '').trim();
+      form2Email.value = form2Email.value.toLowerCase().replace(/ +/g, '').trim();
+      form2Email.value = toString(form2Email.value);
     }, true);
   });
 
   form2Phone.addEventListener('input', () => {
-    form2Phone.value = form2Phone.value.replace(/[^(\+7|8)\-(\(\d{3}\)|\d{3})\d{7}$]/, '');
+    form2Phone.value = form2Phone.value.replace(/[^0-9()-]/ig, '');
+    // form2Phone.value = form2Phone.value.replace(/[^\+?[78]([-()]*\d){10}$]/);
     form2Phone.addEventListener('blur', () =>{
       form2Phone.value = form2Phone.value.replace(/ +/g, '').trim();
-      // maskPhone('#form2-phone');
+      form2Phone.value = toString(form2Phone.value);
     }, true);
   });
 
