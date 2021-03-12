@@ -314,7 +314,6 @@ window.addEventListener('DOMContentLoaded', function () {
       }
       
       totalValue.textContent = Math.round(total);
-      // totalValue.textContent = total;
      };
 
      calcBlock.addEventListener('change', (event) => {
@@ -330,21 +329,38 @@ window.addEventListener('DOMContentLoaded', function () {
   calc(100);
 
   // остались вопросы
+  const form1Name = document.querySelector('#form1-name');
   const form2Name = document.querySelector('#form2-name');
   const form2Message = document.querySelector('#form2-message');
   const form2Email = document.querySelector('#form2-email');
-  const form2Phone = document.querySelector('#form2-phone');
+  const form2Phone = document.querySelectorAll('.form-phone');
 
   const toString = (str) => {
     return str
     .replace(/ +/g, ' ').trim()
-    .replace(/-+/g, '-')
+    .replace(/-+/g, '-')    
     .replace(/^-/g, '')
     .replace(/-$/g, '');
   };
 
+  form1Name.addEventListener('input', () => {
+    form1Name.value = form1Name.value.replace(/[^а-я\s]/ig, '');
+
+    form1Name.addEventListener('blur', () =>{
+      form1Name.value = toString(form1Name.value);
+      const toTitleCase = (str) => {
+        return str
+          .toLowerCase()
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+      };
+      form1Name.value = toTitleCase(form1Name.value);
+    }, true);
+  });
+
   form2Name.addEventListener('input', () => {
-    form2Name.value = form2Name.value.replace(/[^а-я\s-]/ig, '');
+    form2Name.value = form2Name.value.replace(/[^а-я\s]/ig, '');
 
     form2Name.addEventListener('blur', () =>{
       form2Name.value = toString(form2Name.value);
@@ -360,7 +376,7 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 
   form2Message.addEventListener('input', () => {
-    form2Message.value = form2Message.value.replace(/[^а-я\s-]/ig, '');
+    form2Message.value = form2Message.value.replace(/[^а-я0-9\s,.]/ig, '');
 
     form2Name.addEventListener('blur', () =>{
       form2Message.value = form2Message.value.charAt(0).toUpperCase() + form2Message.value.toLowerCase().slice(1);
@@ -378,14 +394,114 @@ window.addEventListener('DOMContentLoaded', function () {
     }, true);
   });
 
-  form2Phone.addEventListener('input', () => {
-    form2Phone.value = form2Phone.value.replace(/[^0-9()-]/ig, '');
-    // form2Phone.value = form2Phone.value.replace(/[^\+?[78]([-()]*\d){10}$]/);
-    form2Phone.addEventListener('blur', () =>{
-      form2Phone.value = form2Phone.value.replace(/ +/g, '').trim();
-      form2Phone.value = toString(form2Phone.value);
-    }, true);
-  });
+  for(let i = 0; i < form2Phone.length; i++){
+    form2Phone[i].addEventListener('input', () => {
+      form2Phone[i].value = form2Phone[i].value.replace(/^[\+{1}][^0-9]/ig, '');
+      // form2Phone.value = form2Phone.value.replace(/[^\+?[78]([-()]*\d){10}$]/);
+      form2Phone[i].addEventListener('blur', () =>{
+        form2Phone[i].value = form2Phone[i].value.replace(/ +/g, '').trim();
+        form2Phone[i].value = form2Phone[i].value.replace(/\++$/g, '');
+        form2Phone[i].value = toString(form2Phone[i].value);
+      }, true);
+    });
+  }
+  
 
+
+  // send-ajax-form
+  const sendForm = () => {
+    const errorMassage = 'Что то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+    const form = document.getElementById('form1');
+    const form2 = document.getElementById('form2');
+    const statusMessage = document.createElement('div');
+    const formBtn = document.querySelectorAll('.form-btn');
+    const inputs = document.querySelectorAll('input');
+    // statusMessage.textContent = 'Тут будет сообщение!';
+    statusMessage.style.cssText = 'font-size: 4rem;';
+    // form.appendChild(statusMessage);
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      form.appendChild(statusMessage);
+
+      statusMessage.textContent = loadMessage;
+      const formData = new FormData(form);
+      let body = {};
+      // for(let val of formData.entries()){
+      //   body[val[0]] = val[1]
+      // }
+      formData.forEach((val, key) =>{
+        body[key] = val;
+      });
+      postData(body, () => {
+        statusMessage.textContent = statusMessage;
+        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+      }, (error) => {
+        statusMessage.textContent = errorMassage;
+        console.log(error);
+        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+      }); 
+     
+    });
+
+    form2.addEventListener('submit', (event) => {
+      event.preventDefault();
+      form2.appendChild(statusMessage);
+      statusMessage.textContent = loadMessage;
+      const formData2 = new FormData(form2);
+      let body = {};
+      // for(let val of formData.entries()){
+      //   body[val[0]] = val[1]
+      // }
+      formData2.forEach((val, key) =>{
+        body[key] = val;
+      });
+      postData(body, () => {
+        statusMessage.textContent = statusMessage;
+        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+      }, (error) => {
+        statusMessage.textContent = errorMassage;
+        console.log(error);
+        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+      });
+     
+    });
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+      request.addEventListener('readystatechange', () =>{
+        if (request.readyState !== 4) {
+          return;
+        }
+        if(request.status === 200){
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+      request.open('POST', './server.php');
+      // request.setRequestHeader('Content-Type', 'multipart/form-data');
+      request.setRequestHeader('Content-Type', 'aplication/json');
+      
+      // request.send(formData);
+      request.send(JSON.stringify(body));
+    };
+
+    
+
+  };
+  sendForm();
+// const formBtn = document.querySelectorAll('.form-btn');
+//     const inputs = document.querySelectorAll('input');
+    
+    // formBtn.addEventListener('click', () =>{
+    //   document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+    //   // inputs.forEach(element => {
+    //   //   console.log('element: ', element.value = '');
+    //   // });
+    // });
 
 });
