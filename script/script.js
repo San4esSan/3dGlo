@@ -356,9 +356,7 @@ window.addEventListener('DOMContentLoaded', function () {
         elem.value = toString(elem.value);
       break;
       case 'user_email':
-        elem.value = toTitleCase(elem.value);
-        elem.value = elem.value.toString(elem.value);
-        elem.value = elem.value.toLowerCase();
+        elem.value = toString(elem.value).toLowerCase();
       break;
       case 'user_phone':
         elem.value = toString(elem.value);
@@ -394,19 +392,19 @@ window.addEventListener('DOMContentLoaded', function () {
   for(let i = 0; i < form.length; i++){
 
     for(let elem of form[i].elements){
-        if(elem.tagName !== 'BUTTON'){
-          elem.addEventListener('input', () => {
-            inputRestriction(elem);
-          });
-          elem.addEventListener('blur', () => {
-            validateElem(elem);
-          });
-        }
+      if(elem.tagName !== 'BUTTON'){
+        elem.addEventListener('input', () => {
+          inputRestriction(elem);
+        });
+        elem.addEventListener('blur', () => {
+          validateElem(elem);
+        });
       }
-    
-      form[i].addEventListener('submit', (event) => {
-        event.preventDefault();
-      });
-  };
+    }
+  
+    form[i].addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
+  }
 
 });
