@@ -387,12 +387,73 @@ window.addEventListener('DOMContentLoaded', function () {
           validateElem(elem);
         });
       }
+     
     }
   
     form[i].addEventListener('submit', (event) => {
       event.preventDefault();
     });
   }
+
+
+  // send-ajax-form
+  const sendForm = () => {
+    const errorMassage = 'Что то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+      
+    const form = document.querySelectorAll('form');
+    const statusMessage = document.createElement('div');
+    const formBtn = document.querySelectorAll('.form-btn');
+    const inputs = document.querySelectorAll('input');
+    statusMessage.style.cssText = 'font-size: 4rem;';
+    // form.appendChild(statusMessage);
+    
+    for(let i = 0; i < form.length; i++){
+      form[i].addEventListener('submit', (event) => {
+        event.preventDefault();
+        form[i].appendChild(statusMessage);
+  
+        statusMessage.textContent = loadMessage;
+        const formData = new FormData(form[i]);
+        
+        let body = {};
+        
+        formData.forEach((val, key) =>{
+          body[key] = val;
+          console.log('body: ', body);
+        });
+        postData(body, () => {
+          statusMessage.textContent = statusMessage;
+          document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+        }, (error) => {
+          statusMessage.textContent = errorMassage;
+          console.log(error);
+          document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+        }); 
+        
+      });
+    }
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+      request.addEventListener('readystatechange', () =>{
+        if (request.readyState !== 4) {
+          return;
+        }
+        if(request.status === 200){
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'aplication/json');
+      request.send(JSON.stringify(body));
+    };
+  };
+  sendForm();
+
 
 
   
