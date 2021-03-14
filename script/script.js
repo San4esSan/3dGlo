@@ -329,84 +329,76 @@ window.addEventListener('DOMContentLoaded', function () {
   calc(100);
 
   // остались вопросы
-  const form1Name = document.querySelector('#form1-name');
-  const form2Name = document.querySelector('#form2-name');
-  const form2Message = document.querySelector('#form2-message');
-  const form2Email = document.querySelector('#form2-email');
-  const form2Phone = document.querySelectorAll('.form-phone');
+  const form = document.querySelectorAll('form');
+
+  const toTitleCase = (str) => {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   const toString = (str) => {
     return str
-    .replace(/ +/g, ' ').trim()
-    .replace(/-+/g, '-')    
+    .replace(/-+/g, '-')
+    .replace(/ +/g, ' ')
+    .replace(/^ +/gm, '')
     .replace(/^-/g, '')
     .replace(/-$/g, '');
   };
 
-  form1Name.addEventListener('input', () => {
-    form1Name.value = form1Name.value.replace(/[^а-я\s]/ig, '');
+  const validateElem = (elem) => {
+    switch (elem.name) {      
+      case 'user_name':
+        elem.value = toTitleCase(elem.value);
+        elem.value = toString(elem.value);
+      break;
+      case 'user_email':
+        elem.value = toString(elem.value).toLowerCase();
+      break;
+      case 'user_phone':
+        elem.value = toString(elem.value);
+      break;
+      case 'user_message':
+        elem.value = elem.value.charAt(0).toUpperCase() + elem.value.toLowerCase().slice(1);
+        elem.value = toString(elem.value);
+      break;
+    }
+  };
 
-    form1Name.addEventListener('blur', () =>{
-      form1Name.value = toString(form1Name.value);
-      const toTitleCase = (str) => {
-        return str
-          .toLowerCase()
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-      };
-      form1Name.value = toTitleCase(form1Name.value);
-    }, true);
-  });
+  const inputRestriction = (elem) => {
+    if(elem.name === 'user_name'){
+      elem.value = elem.value.replace(/[^а-я\s-]/ig, '');      
+    }
+    if(elem.name === 'user_email'){
+      elem.value = elem.value.replace(/[^a-z.@\-_*'!~]/ig, '');
+    }
+    if(elem.name === 'user_phone'){
+      elem.value = elem.value.replace(/[^0-9+]/ig, '');
+    }
+    if(elem.name === 'user_message'){
+      elem.value = elem.value.replace(/[^а-я0-9. ,\s-]/ig, '');
+    }
+  };
 
-  form2Name.addEventListener('input', () => {
-    form2Name.value = form2Name.value.replace(/[^а-я\s]/ig, '');
+  for(let i = 0; i < form.length; i++){
 
-    form2Name.addEventListener('blur', () =>{
-      form2Name.value = toString(form2Name.value);
-      const toTitleCase = (str) => {
-        return str
-          .toLowerCase()
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-      };
-      form2Name.value = toTitleCase(form2Name.value);
-    }, true);
-  });
-
-  form2Message.addEventListener('input', () => {
-    form2Message.value = form2Message.value.replace(/[^а-я0-9\s,.]/ig, '');
-
-    form2Name.addEventListener('blur', () =>{
-      form2Message.value = form2Message.value.charAt(0).toUpperCase() + form2Message.value.toLowerCase().slice(1);
-      form2Message.value = toString(form2Message.value);
-    }, true);
-    
-  });
-
-  form2Email.addEventListener('input', () => {
-    form2Email.value = form2Email.value.replace(/[^a-z.@\-_*'!~]/ig, '');
-    // form2Email.value = form2Email.value.replace(/[^[a-z._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$]/i, '');
-    form2Email.addEventListener('blur', () =>{
-      form2Email.value = form2Email.value.toLowerCase().replace(/ +/g, '').trim();
-      form2Email.value = toString(form2Email.value);
-    }, true);
-  });
-
-  for(let i = 0; i < form2Phone.length; i++){
-    form2Phone[i].addEventListener('input', () => {
-      form2Phone[i].value = form2Phone[i].value.replace(/^[\+{1}][^0-9]/ig, '');
-      // form2Phone.value = form2Phone.value.replace(/[^\+?[78]([-()]*\d){10}$]/);
-      form2Phone[i].addEventListener('blur', () =>{
-        form2Phone[i].value = form2Phone[i].value.replace(/ +/g, '').trim();
-        form2Phone[i].value = form2Phone[i].value.replace(/\++$/g, '');
-        form2Phone[i].value = toString(form2Phone[i].value);
-      }, true);
+    for(let elem of form[i].elements){
+      if(elem.tagName !== 'BUTTON'){
+        elem.addEventListener('input', () => {
+          inputRestriction(elem);
+        });
+        elem.addEventListener('blur', () => {
+          validateElem(elem);
+        });
+      }
+    }
+  
+    form[i].addEventListener('submit', (event) => {
+      event.preventDefault();
     });
   }
-  
-
 
   // send-ajax-form
   const sendForm = () => {
@@ -494,14 +486,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
   };
   sendForm();
-// const formBtn = document.querySelectorAll('.form-btn');
-//     const inputs = document.querySelectorAll('input');
-    
-    // formBtn.addEventListener('click', () =>{
-    //   document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-    //   // inputs.forEach(element => {
-    //   //   console.log('element: ', element.value = '');
-    //   // });
-    // });
+
 
 });
