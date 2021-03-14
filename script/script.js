@@ -257,10 +257,8 @@ window.addEventListener('DOMContentLoaded', function () {
         startSlide();
       }
     });
-
     startSlide(2000);
   };
-  
   slider();
 
   // наша команда
@@ -324,50 +322,78 @@ window.addEventListener('DOMContentLoaded', function () {
       }
 
     });
-
   };
   calc(100);
 
   // остались вопросы
-  const form2Name = document.querySelector('#form2-name');
-  const form2Message = document.querySelector('#form2-message');
-  const form2Email = document.querySelector('#form2-email');
-  const form2Phone = document.querySelector('#form2-phone');
+  const form = document.querySelectorAll('form');
 
-  form2Name.addEventListener('input', () => {
-    form2Name.value = form2Name.value.replace(/[^а-я\s-]/ig, '');
-    form2Name.addEventListener('blur', () =>{
-      form2Name.value = form2Name.value[0].toUpperCase() + form2Name.value.toLowerCase().slice(1);
-    }, true);
-  });
+  const toTitleCase = (str) => {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
-  form2Message.addEventListener('input', () => {
-    form2Message.value = form2Message.value.replace(/[^а-я\s-]/ig, '');
-    form2Name.addEventListener('blur', () =>{
-      form2Message.value = form2Message.value[0].toUpperCase() + form2Message.value.toLowerCase().slice(1);
-      form2Message.value = form2Message.value.replace(/ +/g, ' ').trim();
-    }, true);
-    
-  });
+  const toString = (str) => {
+    return str
+    .replace(/-+/g, '-')
+    .replace(/ +/g, ' ')
+    .replace(/^ +/gm, '')
+    .replace(/^-/g, '')
+    .replace(/-$/g, '');
+  };
 
-  form2Email.addEventListener('input', () => {
-    form2Email.value = form2Email.value.replace(/[^a-z.@\-_*'!~]/ig, '');
-    // form2Email.value = form2Email.value.replace(/[^[a-z._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$]/i, '');
-    form2Email.addEventListener('blur', () =>{
-      form2Email.value = form2Email.value.toLowerCase().replace(/ +/g, '').trim();
-    }, true);
-  });
+  const validateElem = (elem) => {
+    switch (elem.name) {      
+      case 'user_name':
+        elem.value = toTitleCase(elem.value);
+        elem.value = toString(elem.value);
+      break;
+      case 'user_email':
+        elem.value = toString(elem.value).toLowerCase();
+      break;
+      case 'user_phone':
+        elem.value = toString(elem.value);
+      break;
+      case 'user_message':
+        elem.value = elem.value.charAt(0).toUpperCase() + elem.value.toLowerCase().slice(1);
+        elem.value = toString(elem.value);
+      break;
+    }
+  };
 
-  form2Phone.addEventListener('input', () => {
-    form2Phone.value = form2Phone.value.replace(/[^(\+7|8)\-(\(\d{3}\)|\d{3})\d{7}$]/, '');
-    form2Phone.addEventListener('blur', () =>{
-      form2Phone.value = form2Phone.value.replace(/ +/g, '').trim();
-    }, true);
-  });
+  const inputRestriction = (elem) => {
+    if(elem.name === 'user_name'){
+      elem.value = elem.value.replace(/[^а-я\s-]/ig, '');      
+    }
+    if(elem.name === 'user_email'){
+      elem.value = elem.value.replace(/[^a-z.@\-_*'!~]/ig, '');
+    }
+    if(elem.name === 'user_phone'){
+      elem.value = elem.value.replace(/[^0-9()-]/ig, '');
+    }
+  };
+
+  for(let i = 0; i < form.length; i++){
+
+    for(let elem of form[i].elements){
+      if(elem.tagName !== 'BUTTON'){
+        elem.addEventListener('input', () => {
+          inputRestriction(elem);
+        });
+        elem.addEventListener('blur', () => {
+          validateElem(elem);
+        });
+      }
+    }
+  
+    form[i].addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
+  }
 
 
-
-
-
-
+  
 });
