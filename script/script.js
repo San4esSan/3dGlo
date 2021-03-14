@@ -405,62 +405,35 @@ window.addEventListener('DOMContentLoaded', function () {
     const errorMassage = 'Что то пошло не так...',
       loadMessage = 'Загрузка...',
       successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
-
-    const form = document.getElementById('form1');
-    const form2 = document.getElementById('form2');
+      
+    const form = document.querySelectorAll('form');
     const statusMessage = document.createElement('div');
-    const formBtn = document.querySelectorAll('.form-btn');
-    const inputs = document.querySelectorAll('input');
-    // statusMessage.textContent = 'Тут будет сообщение!';
     statusMessage.style.cssText = 'font-size: 4rem;';
-    // form.appendChild(statusMessage);
-
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      form.appendChild(statusMessage);
-
-      statusMessage.textContent = loadMessage;
-      const formData = new FormData(form);
-      let body = {};
-      // for(let val of formData.entries()){
-      //   body[val[0]] = val[1]
-      // }
-      formData.forEach((val, key) =>{
-        body[key] = val;
+    
+    for(let i = 0; i < form.length; i++){
+      form[i].addEventListener('submit', (event) => {
+        event.preventDefault();
+        form[i].appendChild(statusMessage);
+  
+        statusMessage.textContent = loadMessage;
+        const formData = new FormData(form[i]);
+        
+        let body = {};
+        
+        formData.forEach((val, key) =>{
+          body[key] = val;
+        });
+        postData(body, () => {
+          statusMessage.textContent = statusMessage;
+          document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+        }, (error) => {
+          statusMessage.textContent = errorMassage;
+          console.log(error);
+          document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+        }); 
+        
       });
-      postData(body, () => {
-        statusMessage.textContent = statusMessage;
-        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-      }, (error) => {
-        statusMessage.textContent = errorMassage;
-        console.log(error);
-        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-      }); 
-     
-    });
-
-    form2.addEventListener('submit', (event) => {
-      event.preventDefault();
-      form2.appendChild(statusMessage);
-      statusMessage.textContent = loadMessage;
-      const formData2 = new FormData(form2);
-      let body = {};
-      // for(let val of formData.entries()){
-      //   body[val[0]] = val[1]
-      // }
-      formData2.forEach((val, key) =>{
-        body[key] = val;
-      });
-      postData(body, () => {
-        statusMessage.textContent = statusMessage;
-        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-      }, (error) => {
-        statusMessage.textContent = errorMassage;
-        console.log(error);
-        document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-      });
-     
-    });
+    }
 
     const postData = (body, outputData, errorData) => {
       const request = new XMLHttpRequest();
@@ -475,15 +448,9 @@ window.addEventListener('DOMContentLoaded', function () {
         }
       });
       request.open('POST', './server.php');
-      // request.setRequestHeader('Content-Type', 'multipart/form-data');
       request.setRequestHeader('Content-Type', 'aplication/json');
-      
-      // request.send(formData);
       request.send(JSON.stringify(body));
     };
-
-    
-
   };
   sendForm();
 
