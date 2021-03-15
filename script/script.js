@@ -404,10 +404,7 @@ window.addEventListener('DOMContentLoaded', function () {
       
     const form = document.querySelectorAll('form');
     const statusMessage = document.createElement('div');
-    const formBtn = document.querySelectorAll('.form-btn');
-    const inputs = document.querySelectorAll('input');
     statusMessage.style.cssText = 'font-size: 4rem;';
-    // form.appendChild(statusMessage);
     
     for(let i = 0; i < form.length; i++){
       form[i].addEventListener('submit', (event) => {
@@ -421,7 +418,6 @@ window.addEventListener('DOMContentLoaded', function () {
         
         formData.forEach((val, key) =>{
           body[key] = val;
-          console.log('body: ', body);
         });
         postData(body, () => {
           statusMessage.textContent = statusMessage;
@@ -435,22 +431,29 @@ window.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    const postData = (body, outputData, errorData) => {
-      const request = new XMLHttpRequest();
-      request.addEventListener('readystatechange', () =>{
-        if (request.readyState !== 4) {
-          return;
-        }
-        if(request.status === 200){
-          outputData();
-        } else {
-          errorData(request.status);
-        }
+    const postData = (body) => {
+
+      return new Promise((resolve, reject) => {
+        const request = new XMLHttpRequest();
+        request.addEventListener('readystatechange', () =>{
+          if (request.readyState !== 4) {
+            return;
+          }
+          if(request.status === 200){
+            resolve();
+          } else {
+            reject(request.status);
+          }
+        });
+        request.open('POST', './server.php');
+        request.setRequestHeader('Content-Type', 'aplication/json');
+        request.send(JSON.stringify(body));
       });
-      request.open('POST', './server.php');
-      request.setRequestHeader('Content-Type', 'aplication/json');
-      request.send(JSON.stringify(body));
+      
     };
+    postData()
+    .then()
+    .catch(error => console.error(error));
   };
   sendForm();
 
