@@ -419,14 +419,16 @@ window.addEventListener('DOMContentLoaded', function () {
         formData.forEach((val, key) =>{
           body[key] = val;
         });
-        postData(body, () => {
-          statusMessage.textContent = statusMessage;
-          document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-        }, (error) => {
-          statusMessage.textContent = errorMassage;
-          console.log(error);
-          document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-        }); 
+        postData(body)
+          .then(() => {
+            statusMessage.textContent = successMessage;
+            document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+          })
+          .catch((error) => {
+            statusMessage.textContent = errorMassage;
+            console.log(error);
+            document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+          }); 
         
       });
     }
@@ -452,10 +454,10 @@ window.addEventListener('DOMContentLoaded', function () {
       
     };
     postData()
-    .then()
-    .catch(error => console.error(error));
+    
   };
   sendForm();
+
 
 
 
