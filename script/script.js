@@ -374,6 +374,9 @@ window.addEventListener('DOMContentLoaded', function () {
     if(elem.name === 'user_phone'){
       elem.value = elem.value.replace(/[^0-9()-]/ig, '');
     }
+    if(elem.name === 'user_message'){
+      elem.value = elem.value.replace(/[^а-я0-9. ,\s-]/ig, '');
+    }
   };
 
   for(let i = 0; i < form.length; i++){
