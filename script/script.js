@@ -405,6 +405,7 @@ window.addEventListener('DOMContentLoaded', function () {
       
     const form = document.querySelectorAll('form');
     const statusMessage = document.createElement('div');
+    console.log('statusMessage: ', statusMessage);
     statusMessage.style.cssText = 'font-size: 4rem;';
     
     for(let i = 0; i < form.length; i++){
@@ -428,12 +429,15 @@ window.addEventListener('DOMContentLoaded', function () {
             }
             statusMessage.textContent = successMessage;
             document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
+            setTimeout(() => statusMessage.remove(), 3000);
           })
           .catch((error) => {
             statusMessage.textContent = errorMassage;
             console.log(error);
             document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-          }); 
+            setTimeout(() => statusMessage.remove(), 3000);
+          })
+          
         
       });
     }
