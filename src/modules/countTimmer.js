@@ -10,7 +10,7 @@ const countTimer = (deadline) => {
     const timeRemaining = (dateStop - dateNow) / 1000,
       seconds = Math.floor(timeRemaining % 60),        
       minutes = Math.floor((timeRemaining / 60) % 60),
-      hours = Math.floor((timeRemaining / 60 / 60) % 24),
+      hours = Math.floor((timeRemaining / 60 / 60)),
       day = Math.floor(timeRemaining / 60 / 60 / 24);
       
     if (dateStop >= dateNow) {

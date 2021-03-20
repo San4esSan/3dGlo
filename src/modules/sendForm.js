@@ -6,7 +6,7 @@ const sendForm = () => {
   const form = document.querySelectorAll('form'),
     statusMessage = document.createElement('div');
     statusMessage.style.cssText = 'font-size: 2rem;';
-    statusMessage.style.color = 'red';
+    statusMessage.style.color = 'yellow';
   
   for(let i = 0; i < form.length; i++){
     form[i].addEventListener('submit', (event) => {
@@ -30,7 +30,9 @@ const sendForm = () => {
           }
           statusMessage.textContent = successMessage;
           document.querySelectorAll('input, textarea').forEach(el=>el.value = '');
-          setTimeout(() => statusMessage.remove(), 4000);
+          setTimeout(() => statusMessage.remove(), 3000);
+          const popup = document.querySelector('.popup');
+          setTimeout(() => popup.style.display = 'none', 3000);
         })
         .catch((error) => {
           statusMessage.textContent = errorMassage;
