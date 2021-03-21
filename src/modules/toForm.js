@@ -19,6 +19,7 @@ const toForm = () => {
   };
 
   const validateElem = (elem) => {
+
     switch (elem.name) {      
       case 'user_name':
         elem.value = toTitleCase(elem.value);
@@ -49,22 +50,31 @@ const toForm = () => {
     }
   };
 
-  for(let i = 0; i < form.length; i++){
+  for(let i = 0; i < form.length; i++){  
+    const elementsForm = [];
+
+    form[i].addEventListener('submit', (event) =>{
+      event.preventDefault();
+      elementsForm.forEach(elem => {
+        if(!elem.value){
+          elem.style = 'border: 5px solid red;';
+        } else {
+          elem.style.border = 'none';
+        }     
+      });
+    });
 
     for(let elem of form[i].elements){
       if(elem.tagName !== 'BUTTON'){
+        elementsForm.push(elem);
         elem.addEventListener('input', () => {
           inputRestriction(elem);
         });
         elem.addEventListener('blur', () => {
           validateElem(elem);
-        });
+        });  
       }
     }
-  
-    form[i].addEventListener('submit', (event) => {
-      event.preventDefault();
-    });
   }
 };
 

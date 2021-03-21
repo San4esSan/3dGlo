@@ -11,7 +11,7 @@ import toForm from './modules/toForm';
 import sendForm from './modules/sendForm';
   
   // Timer
-  countTimer('21 march 2021 20:47');
+  countTimer('23 march 2021 20:47');
   // menu
   toggleMenu();
   // popup
